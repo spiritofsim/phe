@@ -16,7 +16,7 @@ func TestEval7CardCombs(t *testing.T) {
 	started := time.Now()
 	defer func() {
 		elapsed := time.Since(started)
-		t.Logf("Processed in %v; %v ops", elapsed, int(float64(count)/elapsed.Seconds()))
+		t.Logf("%v Processed in %v", count, elapsed)
 	}()
 
 	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
@@ -63,7 +63,7 @@ func TestEval5CardCombs(t *testing.T) {
 	started := time.Now()
 	defer func() {
 		elapsed := time.Since(started)
-		t.Logf("Processed in %v; %v ops", elapsed, int(float64(count)/elapsed.Seconds()))
+		t.Logf("%v Processed in %v", count, elapsed)
 	}()
 
 	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
@@ -95,13 +95,13 @@ func TestEval5CardCombs(t *testing.T) {
 	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
 }
 
-func requireNoErr(t *testing.T, err error) {
+func requireNoErr(t testing.TB, err error) {
 	if err != nil {
 		t.Error(err)
 	}
 }
 
-func requireEquals(t *testing.T, expected, actual interface{}) {
+func requireEquals(t testing.TB, expected, actual interface{}) {
 	if expected != actual {
 		t.Errorf("%v expected; %v provided", expected, actual)
 	}
