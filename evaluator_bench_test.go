@@ -15,6 +15,7 @@ func BenchmarkCardsEval(b *testing.B) {
 	b.Run("5-cards", func(b *testing.B) { bench(b, 5, ranks) })
 }
 
+// TODO :Fix benchmark. If no hands generation it is must faster
 func bench(b *testing.B, cnt int, ranks []byte) {
 	b.StopTimer()
 	// generate random hands here

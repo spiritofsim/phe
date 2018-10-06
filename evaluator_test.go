@@ -95,9 +95,23 @@ func TestEval5CardCombs(t *testing.T) {
 	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
 }
 
+func TestBadCardCount(t *testing.T) {
+	ranks, err := ioutil.ReadFile("ranks.dat")
+	requireNoErr(t, err)
+
+	_, _, err = Eval(ranks, Card(1))
+	requireErr(t, err)
+}
+
 func requireNoErr(t testing.TB, err error) {
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func requireErr(t testing.TB, err error) {
+	if err == nil {
+		t.Error("error expected")
 	}
 }
 
