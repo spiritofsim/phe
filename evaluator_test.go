@@ -31,9 +31,7 @@ func TestEval7CardCombs(t *testing.T) {
 		}
 	}
 
-	for i, hts := range handTypeSum {
-		t.Logf("%s\t:\t%d", HandType(i), hts)
-	}
+	logHandTypeSums(t, handTypeSum)
 
 	requireEquals(t, 133784560, count)
 	requireEquals(t, 23294460, handTypeSum[HandTypeHighCard])
@@ -46,6 +44,50 @@ func TestEval7CardCombs(t *testing.T) {
 	requireEquals(t, 224848, handTypeSum[HandTypeFourOfaKind])
 	requireEquals(t, 41584, handTypeSum[HandTypeStraightFlush])
 	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
+}
+
+// TestEvalAllCobs will enumerate all 7462 possible 5-card poker hands
+// Number of combinations taken from http://suffe.cool/poker/evaluator.html
+func TestEval5CardCombs(t *testing.T) {
+	ranks, err := ioutil.ReadFile("ranks.dat")
+	requireNoErr(t, err)
+
+	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
+	var count = 0
+	for c0 := uint32(1); c0 < 49; c0++ {
+		for c1 := c0 + 1; c1 < 50; c1++ {
+			for c2 := c1 + 1; c2 < 51; c2++ {
+				for c3 := c2 + 1; c3 < 52; c3++ {
+					for c4 := c3 + 1; c4 < 53; c4++ {
+						_, ht, err := Eval(ranks, Card(c0), Card(c1), Card(c2), Card(c3), Card(c4))
+						requireNoErr(t, err)
+						handTypeSum[ht]++
+						count++
+					}
+				}
+			}
+		}
+	}
+
+	logHandTypeSums(t, handTypeSum)
+
+	requireEquals(t, 2598960, count)
+	requireEquals(t, 1302540, handTypeSum[HandTypeHighCard])
+	requireEquals(t, 1098240, handTypeSum[HandTypeOnePair])
+	requireEquals(t, 123552, handTypeSum[HandTypeTwoPairs])
+	requireEquals(t, 54912, handTypeSum[HandTypeThreeOfaKind])
+	requireEquals(t, 10200, handTypeSum[HandTypeStraight])
+	requireEquals(t, 5108, handTypeSum[HandTypeFlush])
+	requireEquals(t, 3744, handTypeSum[HandTypeFullHouse])
+	requireEquals(t, 624, handTypeSum[HandTypeFourOfaKind])
+	requireEquals(t, 40, handTypeSum[HandTypeStraightFlush])
+	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
+}
+
+func logHandTypeSums(t *testing.T, handTypeSum []int) {
+	for i, hts := range handTypeSum {
+		t.Logf("%s\t:\t%d", HandType(i), hts)
+	}
 }
 
 func requireNoErr(t *testing.T, err error) {
