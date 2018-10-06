@@ -1,3 +1,4 @@
+// TODO: Rename to pha - poker hand eval
 package handeval
 
 // This map used for Stringer

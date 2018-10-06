@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// TestEvalAllCobs will enumerate all 133784560 possible 7-card poker hands
+// TestEvalAllCombs will enumerate all 133784560 possible 7-card poker hands
 func TestEval7CardCombs(t *testing.T) {
 	ranks, err := ioutil.ReadFile("ranks.dat")
 	requireNoErr(t, err)
@@ -52,7 +52,7 @@ func TestEval7CardCombs(t *testing.T) {
 	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
 }
 
-// TestEvalAllCobs will enumerate all 7462 possible 5-card poker hands
+// TestEvalAllCobs will enumerate all 2598960 possible 5-card poker hands
 // Number of combinations taken from http://suffe.cool/poker/evaluator.html
 func TestEval5CardCombs(t *testing.T) {
 	ranks, err := ioutil.ReadFile("ranks.dat")
@@ -100,6 +100,16 @@ func TestBadCardCount(t *testing.T) {
 	requireNoErr(t, err)
 
 	_, _, err = Eval(ranks, Card(1))
+	requireErr(t, err)
+}
+
+func TestBadCardNumberEval(t *testing.T) {
+	ranks, err := ioutil.ReadFile("ranks.dat")
+	requireNoErr(t, err)
+
+	x, y, err := Eval(ranks, Card(100), Card(100), Card(100), Card(100), Card(100))
+	t.Log(x)
+	t.Log(y)
 	requireErr(t, err)
 }
 
