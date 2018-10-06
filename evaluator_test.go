@@ -3,6 +3,7 @@ package handeval
 import (
 	"io/ioutil"
 	"testing"
+	"time"
 )
 
 // TestEvalAllCobs will enumerate all 133784560 possible 7-card poker hands
@@ -10,8 +11,15 @@ func TestEval7CardCombs(t *testing.T) {
 	ranks, err := ioutil.ReadFile("ranks.dat")
 	requireNoErr(t, err)
 
-	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
 	var count = 0
+
+	started := time.Now()
+	defer func() {
+		elapsed := time.Since(started)
+		t.Logf("Processed in %v; %v ops", elapsed, int(float64(count)/elapsed.Seconds()))
+	}()
+
+	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
 	for c0 := uint32(1); c0 < 47; c0++ {
 		for c1 := c0 + 1; c1 < 48; c1++ {
 			for c2 := c1 + 1; c2 < 49; c2++ {
@@ -30,8 +38,6 @@ func TestEval7CardCombs(t *testing.T) {
 			}
 		}
 	}
-
-	logHandTypeSums(t, handTypeSum)
 
 	requireEquals(t, 133784560, count)
 	requireEquals(t, 23294460, handTypeSum[HandTypeHighCard])
@@ -52,8 +58,15 @@ func TestEval5CardCombs(t *testing.T) {
 	ranks, err := ioutil.ReadFile("ranks.dat")
 	requireNoErr(t, err)
 
-	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
 	var count = 0
+
+	started := time.Now()
+	defer func() {
+		elapsed := time.Since(started)
+		t.Logf("Processed in %v; %v ops", elapsed, int(float64(count)/elapsed.Seconds()))
+	}()
+
+	var handTypeSum = make([]int, len(handTypes)) // Stores number of combs
 	for c0 := uint32(1); c0 < 49; c0++ {
 		for c1 := c0 + 1; c1 < 50; c1++ {
 			for c2 := c1 + 1; c2 < 51; c2++ {
@@ -69,8 +82,6 @@ func TestEval5CardCombs(t *testing.T) {
 		}
 	}
 
-	logHandTypeSums(t, handTypeSum)
-
 	requireEquals(t, 2598960, count)
 	requireEquals(t, 1302540, handTypeSum[HandTypeHighCard])
 	requireEquals(t, 1098240, handTypeSum[HandTypeOnePair])
@@ -82,12 +93,6 @@ func TestEval5CardCombs(t *testing.T) {
 	requireEquals(t, 624, handTypeSum[HandTypeFourOfaKind])
 	requireEquals(t, 40, handTypeSum[HandTypeStraightFlush])
 	requireEquals(t, 0, handTypeSum[HandTypeInvalid])
-}
-
-func logHandTypeSums(t *testing.T, handTypeSum []int) {
-	for i, hts := range handTypeSum {
-		t.Logf("%s\t:\t%d", HandType(i), hts)
-	}
 }
 
 func requireNoErr(t *testing.T, err error) {
