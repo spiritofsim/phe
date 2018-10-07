@@ -1,13 +1,12 @@
 package pha
 
 import (
-	"io/ioutil"
 	"math/rand"
 	"testing"
 )
 
 func BenchmarkCardsEval(b *testing.B) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(b, err)
 
 	b.Run("7-cards", func(b *testing.B) { bench(b, 7, ranks) })

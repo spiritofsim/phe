@@ -4,7 +4,7 @@ This is a Texas Holdem poker hand evaluation library.
 
 Can evaluate 5,6 and 7 card combinations.
 
-It uses TwoPlusTwo algorithm with pre-build ranks table (see ranks.dat).
+It uses TwoPlusTwo algorithm with pre-build ranks table (see ranks.dat.gz).
 
 On my machine (i7-7700HQ 2.80 GHz) it can evaluate 53 millions 7-cards hands per second.
 

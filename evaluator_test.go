@@ -1,14 +1,13 @@
 package pha
 
 import (
-	"io/ioutil"
 	"testing"
 	"time"
 )
 
 // TestEvalAllCombs will enumerate all 133784560 possible 7-card poker hands
 func TestEval7CardCombs(t *testing.T) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
 
 	var count = 0
@@ -54,7 +53,7 @@ func TestEval7CardCombs(t *testing.T) {
 // TestEvalAllCobs will enumerate all 2598960 possible 5-card poker hands
 // Number of combinations taken from http://suffe.cool/poker/evaluator.html
 func TestEval5CardCombs(t *testing.T) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
 
 	var count = 0
@@ -94,7 +93,7 @@ func TestEval5CardCombs(t *testing.T) {
 }
 
 func TestBadCardCount(t *testing.T) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
 
 	_, _, err = Eval(ranks, Card(1))
@@ -102,7 +101,7 @@ func TestBadCardCount(t *testing.T) {
 }
 
 func TestBadCardNumberEval(t *testing.T) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
 	_, _, err = Eval(ranks, Card(100), Card(100), Card(100), Card(100), Card(100))
 	requireErr(t, err)

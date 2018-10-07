@@ -1,14 +1,13 @@
 package pha
 
 import (
-	"io/ioutil"
 	"testing"
 )
 
 // This tests just for examples
 
 func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
-	ranks, err := ioutil.ReadFile("ranks.dat")
+	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
 
 	rsfRank, rsfHandType, err := Eval(ranks, ParseCard("ah"), ParseCard("kh"), ParseCard("qh"), ParseCard("jh"), ParseCard("th"))
