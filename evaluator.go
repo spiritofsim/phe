@@ -27,6 +27,10 @@ func Eval(ranks []byte, cards ...Card) (rank uint32, handType HandType, err erro
 	}
 
 	handType = HandType(p >> 12)
+	if handType == 0 {
+		err = errors.New("wrong cards")
+	}
+
 	rank = p & 0x00000fff
 	return
 }

@@ -1,7 +1,7 @@
 // TODO: Rename to pha - poker hand eval
 package handeval
 
-// This map used for Stringer
+// This map for Stringer
 var cards = map[Card]string{
 	1:  "2♣",
 	2:  "2♦",
@@ -57,7 +57,7 @@ var cards = map[Card]string{
 	52: "a♠",
 }
 
-// This map used for parsing
+// This map for parsing
 var cardsBack = map[string]Card{
 	"2c": 1,
 	"2d": 2,

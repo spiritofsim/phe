@@ -20,7 +20,6 @@ type HandType int
 
 // TODO: Remove invalid, return err instead
 const (
-	HandTypeInvalid       HandType = 0
 	HandTypeHighCard      HandType = 1
 	HandTypeOnePair       HandType = 2
 	HandTypeTwoPairs      HandType = 3
