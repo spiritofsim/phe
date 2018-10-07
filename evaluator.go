@@ -1,4 +1,4 @@
-package handeval
+package pha
 
 import (
 	"encoding/binary"
@@ -11,18 +11,18 @@ import (
 // HandType is the name of combination
 // You can load ranks from ranks.dat or embed it in your code
 func Eval(ranks []byte, cards ...Card) (rank uint32, handType HandType, err error) {
-	len := len(cards) // len is just for shorten code
-	if len != 7 && len != 6 && len != 5 {
+	size := len(cards) // len is just for shorten code
+	if size != 7 && size != 6 && size != 5 {
 		err = errors.New("cards can be 7,6 or 5 length")
 		return
 	}
 
 	var p uint32 = 53
-	for i := 0; i < len; i++ {
+	for i := 0; i < size; i++ {
 		p = evalCard(p+uint32(cards[i]), ranks)
 	}
 
-	if len == 5 || len == 6 {
+	if size == 5 || size == 6 {
 		p = evalCard(p, ranks)
 	}
 

@@ -1,4 +1,4 @@
-package handeval
+package pha
 
 import (
 	"io/ioutil"
@@ -15,16 +15,15 @@ func BenchmarkCardsEval(b *testing.B) {
 	b.Run("5-cards", func(b *testing.B) { bench(b, 5, ranks) })
 }
 
-// TODO :Fix benchmark. If no hands generation it is must faster
+// TODO :Fix benchmark. If no hands generation it is must faster. ResetTimer not working
 func bench(b *testing.B, cnt int, ranks []byte) {
-	b.StopTimer()
 	// generate random hands here
 	hands := make([][]Card, b.N)
 	for i := 0; i < b.N; i++ {
 		hands[i] = randomHand(cnt)
 	}
-	b.StartTimer()
 
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Eval(ranks, hands[i]...)
 	}

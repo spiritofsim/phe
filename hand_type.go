@@ -1,4 +1,4 @@
-package handeval
+package pha
 
 // This array is for Stringer
 // index is the HandType
@@ -18,7 +18,6 @@ var handTypes = []string{
 // HandType is a best type of the hand
 type HandType int
 
-// TODO: Remove invalid, return err instead
 const (
 	HandTypeHighCard      HandType = 1
 	HandTypeOnePair       HandType = 2

@@ -1,5 +1,4 @@
-// TODO: Rename to pha - poker hand eval
-package handeval
+package pha
 
 // This map for Stringer
 var cards = map[Card]string{
@@ -122,7 +121,7 @@ func ParseCard(str string) Card {
 	return cardsBack[str]
 }
 
-// String convert card to its string representaion
+// String convert card to its string representation
 // Suits will be: ♠,♥,♦,♣
 func (c Card) String() string {
 	return cards[c]
