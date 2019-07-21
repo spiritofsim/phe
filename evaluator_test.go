@@ -7,36 +7,31 @@ import (
 
 // Issue #1 test
 func TestIssue1(t *testing.T) {
-	fullHouseRank, hullHouseType, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Cardas, Cardad)
+	fullHouse, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Cardas, Cardad)
 	requireNoErr(t, err)
 
-	pairRank, pairType, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Card6h, Card7h)
+	pair, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Card6h, Card7h)
 	requireNoErr(t, err)
 
-	t.Logf("fullHouse type=%v; rank=%v", hullHouseType, fullHouseRank)
-	t.Logf("pair type=%v; rank=%v", pairType, pairRank)
+	requireEquals(t, 1, fullHouse.Compare(pair))
 }
 
 func TestFullHouseBetterThanStreet(t *testing.T) {
-	hfRank, hfHandType, err := Eval(Cardah, Cardac, Card2c, Card2d, Card2s)
+	fullHouse, err := Eval(Cardah, Cardac, Card2c, Card2d, Card2s)
 	requireNoErr(t, err)
-	sRank, sHandType, err := Eval(Cardah, Cardks, Cardqh, Cardjd, Cardtd)
+	straight, err := Eval(Cardah, Cardks, Cardqh, Cardjd, Cardtd)
 	requireNoErr(t, err)
 
-	requireEquals(t, HandTypeFullHouse, hfHandType)
-	requireEquals(t, HandTypeStraight, sHandType)
-	requireTrue(t, hfRank > sRank)
+	requireEquals(t, 1, fullHouse.Compare(straight))
 }
 
 func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
-	rsfRank, rsfHandType, err := Eval(Cardah, Cardkh, Cardqh, Cardjh, Cardth)
+	rsf, err := Eval(Cardah, Cardkh, Cardqh, Cardjh, Cardth)
 	requireNoErr(t, err)
-	ksfRank, ksfHandType, err := Eval(Cardkh, Cardqh, Cardjh, Cardth, Card9h)
+	sf, err := Eval(Cardkh, Cardqh, Cardjh, Cardth, Card9h)
 	requireNoErr(t, err)
 
-	requireEquals(t, HandTypeStraightFlush, rsfHandType)
-	requireEquals(t, HandTypeStraightFlush, ksfHandType)
-	requireTrue(t, rsfRank > ksfRank)
+	requireEquals(t, 1, rsf.Compare(sf))
 }
 
 // TestEvalAllCombs will enumerate all 133784560 possible 7-card poker hands
@@ -57,9 +52,9 @@ func TestEval7CardCombs(t *testing.T) {
 					for c4 := c3 + 1; c4 < 51; c4++ {
 						for c5 := c4 + 1; c5 < 52; c5++ {
 							for c6 := c5 + 1; c6 < 53; c6++ {
-								_, ht, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4), Card(c5), Card(c6))
+								h, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4), Card(c5), Card(c6))
 								requireNoErr(t, err)
-								handTypeSum[ht]++
+								handTypeSum[h.Type]++
 								count++
 							}
 						}
@@ -98,9 +93,9 @@ func TestEval5CardCombs(t *testing.T) {
 			for c2 := c1 + 1; c2 < 51; c2++ {
 				for c3 := c2 + 1; c3 < 52; c3++ {
 					for c4 := c3 + 1; c4 < 53; c4++ {
-						_, ht, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4))
+						h, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4))
 						requireNoErr(t, err)
-						handTypeSum[ht]++
+						handTypeSum[h.Type]++
 						count++
 					}
 				}
@@ -121,35 +116,11 @@ func TestEval5CardCombs(t *testing.T) {
 }
 
 func TestBadCardCount(t *testing.T) {
-	_, _, err := Eval(Card(1))
+	_, err := Eval(Card(1))
 	requireErr(t, err)
 }
 
 func TestBadCardNumberEval(t *testing.T) {
-	_, _, err := Eval(Card(100), Card(100), Card(100), Card(100), Card(100))
+	_, err := Eval(Card(100), Card(100), Card(100), Card(100), Card(100))
 	requireErr(t, err)
-}
-
-func requireNoErr(t testing.TB, err error) {
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func requireErr(t testing.TB, err error) {
-	if err == nil {
-		t.Error("error expected")
-	}
-}
-
-func requireEquals(t testing.TB, expected, actual interface{}) {
-	if expected != actual {
-		t.Errorf("%v expected; %v provided", expected, actual)
-	}
-}
-
-func requireTrue(t testing.TB, val bool) {
-	if !val {
-		t.Error("must be true")
-	}
 }
