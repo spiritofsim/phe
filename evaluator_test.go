@@ -7,13 +7,10 @@ import (
 
 // Issue #1 test
 func TestIssue1(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
+	fullHouseRank, hullHouseType, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Cardas, Cardad)
 	requireNoErr(t, err)
 
-	fullHouseRank, hullHouseType, err := Eval(ranks, Cardjs, Card8c, Card8s, Cardah, Cardtc, Cardas, Cardad)
-	requireNoErr(t, err)
-
-	pairRank, pairType, err := Eval(ranks, Cardjs, Card8c, Card8s, Cardah, Cardtc, Card6h, Card7h)
+	pairRank, pairType, err := Eval(Cardjs, Card8c, Card8s, Cardah, Cardtc, Card6h, Card7h)
 	requireNoErr(t, err)
 
 	t.Logf("fullHouse type=%v; rank=%v", hullHouseType, fullHouseRank)
@@ -21,12 +18,9 @@ func TestIssue1(t *testing.T) {
 }
 
 func TestFullHouseBetterThanStreet(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
+	hfRank, hfHandType, err := Eval(Cardah, Cardac, Card2c, Card2d, Card2s)
 	requireNoErr(t, err)
-
-	hfRank, hfHandType, err := Eval(ranks, Cardah, Cardac, Card2c, Card2d, Card2s)
-	requireNoErr(t, err)
-	sRank, sHandType, err := Eval(ranks, Cardah, Cardks, Cardqh, Cardjd, Cardtd)
+	sRank, sHandType, err := Eval(Cardah, Cardks, Cardqh, Cardjd, Cardtd)
 	requireNoErr(t, err)
 
 	requireEquals(t, HandTypeFullHouse, hfHandType)
@@ -35,12 +29,9 @@ func TestFullHouseBetterThanStreet(t *testing.T) {
 }
 
 func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
+	rsfRank, rsfHandType, err := Eval(Cardah, Cardkh, Cardqh, Cardjh, Cardth)
 	requireNoErr(t, err)
-
-	rsfRank, rsfHandType, err := Eval(ranks, Cardah, Cardkh, Cardqh, Cardjh, Cardth)
-	requireNoErr(t, err)
-	ksfRank, ksfHandType, err := Eval(ranks, Cardkh, Cardqh, Cardjh, Cardth, Card9h)
+	ksfRank, ksfHandType, err := Eval(Cardkh, Cardqh, Cardjh, Cardth, Card9h)
 	requireNoErr(t, err)
 
 	requireEquals(t, HandTypeStraightFlush, rsfHandType)
@@ -50,9 +41,6 @@ func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
 
 // TestEvalAllCombs will enumerate all 133784560 possible 7-card poker hands
 func TestEval7CardCombs(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
-	requireNoErr(t, err)
-
 	var count = 0
 
 	started := time.Now()
@@ -69,7 +57,7 @@ func TestEval7CardCombs(t *testing.T) {
 					for c4 := c3 + 1; c4 < 51; c4++ {
 						for c5 := c4 + 1; c5 < 52; c5++ {
 							for c6 := c5 + 1; c6 < 53; c6++ {
-								_, ht, err := Eval(ranks, Card(c0), Card(c1), Card(c2), Card(c3), Card(c4), Card(c5), Card(c6))
+								_, ht, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4), Card(c5), Card(c6))
 								requireNoErr(t, err)
 								handTypeSum[ht]++
 								count++
@@ -96,9 +84,6 @@ func TestEval7CardCombs(t *testing.T) {
 // TestEvalAllCobs will enumerate all 2598960 possible 5-card poker hands
 // Number of combinations taken from http://suffe.cool/poker/evaluator.html
 func TestEval5CardCombs(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
-	requireNoErr(t, err)
-
 	var count = 0
 
 	started := time.Now()
@@ -113,7 +98,7 @@ func TestEval5CardCombs(t *testing.T) {
 			for c2 := c1 + 1; c2 < 51; c2++ {
 				for c3 := c2 + 1; c3 < 52; c3++ {
 					for c4 := c3 + 1; c4 < 53; c4++ {
-						_, ht, err := Eval(ranks, Card(c0), Card(c1), Card(c2), Card(c3), Card(c4))
+						_, ht, err := Eval(Card(c0), Card(c1), Card(c2), Card(c3), Card(c4))
 						requireNoErr(t, err)
 						handTypeSum[ht]++
 						count++
@@ -136,17 +121,12 @@ func TestEval5CardCombs(t *testing.T) {
 }
 
 func TestBadCardCount(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
-	requireNoErr(t, err)
-
-	_, _, err = Eval(ranks, Card(1))
+	_, _, err := Eval(Card(1))
 	requireErr(t, err)
 }
 
 func TestBadCardNumberEval(t *testing.T) {
-	ranks, err := LoadRanks("ranks.dat.gz")
-	requireNoErr(t, err)
-	_, _, err = Eval(ranks, Card(100), Card(100), Card(100), Card(100), Card(100))
+	_, _, err := Eval(Card(100), Card(100), Card(100), Card(100), Card(100))
 	requireErr(t, err)
 }
 

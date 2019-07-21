@@ -1,16 +1,29 @@
 package phe
 
 import (
+	"bytes"
+	"compress/gzip"
+	"encoding/base64"
 	"encoding/binary"
 	"errors"
+	"io/ioutil"
 )
+
+var ranks []byte
+
+func init() {
+	data, _ := base64.StdEncoding.DecodeString(ranksData)
+	reader, _ := gzip.NewReader(bytes.NewReader(data))
+	defer reader.Close()
+	ranks, _ = ioutil.ReadAll(reader)
+}
 
 // Eval evaluates poker hand
 // Can evaluate 5,6 and 7 hands
 // Rank is the weight of the hand. Bigger rank is best hand
 // HandType is the name of combination
 // You can load ranks from ranks.dat or embed it in your code
-func Eval(ranks []byte, cards ...Card) (uint32, HandType, error) {
+func Eval(cards ...Card) (uint32, HandType, error) {
 	size := len(cards) // len is just for shorten code
 	if size != 7 && size != 6 && size != 5 {
 		return 0, 0, errors.New("cards can be 7,6 or 5 length")

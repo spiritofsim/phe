@@ -6,16 +6,13 @@ import (
 )
 
 func BenchmarkCardsEval(b *testing.B) {
-	ranks, err := LoadRanks("ranks.dat.gz")
-	requireNoErr(b, err)
-
-	b.Run("7-cards", func(b *testing.B) { bench(b, 7, ranks) })
-	b.Run("6-cards", func(b *testing.B) { bench(b, 6, ranks) })
-	b.Run("5-cards", func(b *testing.B) { bench(b, 5, ranks) })
+	b.Run("7-cards", func(b *testing.B) { bench(b, 7) })
+	b.Run("6-cards", func(b *testing.B) { bench(b, 6) })
+	b.Run("5-cards", func(b *testing.B) { bench(b, 5) })
 }
 
 // TODO :Fix benchmark. If no hands generation it is must faster. ResetTimer not working
-func bench(b *testing.B, cnt int, ranks []byte) {
+func bench(b *testing.B, cnt int) {
 	// generate random hands here
 	hands := make([][]Card, b.N)
 	for i := 0; i < b.N; i++ {
@@ -24,7 +21,7 @@ func bench(b *testing.B, cnt int, ranks []byte) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Eval(ranks, hands[i]...)
+		Eval(hands[i]...)
 	}
 }
 
