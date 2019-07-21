@@ -5,6 +5,49 @@ import (
 	"time"
 )
 
+// Issue #1 test
+func TestIssue1(t *testing.T) {
+	ranks, err := LoadRanks("ranks.dat.gz")
+	requireNoErr(t, err)
+
+	fullHouseRank, hullHouseType, err := Eval(ranks, Cardjs, Card8c, Card8s, Cardah, Cardtc, Cardas, Cardad)
+	requireNoErr(t, err)
+
+	pairRank, pairType, err := Eval(ranks, Cardjs, Card8c, Card8s, Cardah, Cardtc, Card6h, Card7h)
+	requireNoErr(t, err)
+
+	t.Logf("fullHouse type=%v; rank=%v", hullHouseType, fullHouseRank)
+	t.Logf("pair type=%v; rank=%v", pairType, pairRank)
+}
+
+func TestFullHouseBetterThanStreet(t *testing.T) {
+	ranks, err := LoadRanks("ranks.dat.gz")
+	requireNoErr(t, err)
+
+	hfRank, hfHandType, err := Eval(ranks, Cardah, Cardac, Card2c, Card2d, Card2s)
+	requireNoErr(t, err)
+	sRank, sHandType, err := Eval(ranks, Cardah, Cardks, Cardqh, Cardjd, Cardtd)
+	requireNoErr(t, err)
+
+	requireEquals(t, HandTypeFullHouse, hfHandType)
+	requireEquals(t, HandTypeStraight, sHandType)
+	requireTrue(t, hfRank > sRank)
+}
+
+func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
+	ranks, err := LoadRanks("ranks.dat.gz")
+	requireNoErr(t, err)
+
+	rsfRank, rsfHandType, err := Eval(ranks, Cardah, Cardkh, Cardqh, Cardjh, Cardth)
+	requireNoErr(t, err)
+	ksfRank, ksfHandType, err := Eval(ranks, Cardkh, Cardqh, Cardjh, Cardth, Card9h)
+	requireNoErr(t, err)
+
+	requireEquals(t, HandTypeStraightFlush, rsfHandType)
+	requireEquals(t, HandTypeStraightFlush, ksfHandType)
+	requireTrue(t, rsfRank > ksfRank)
+}
+
 // TestEvalAllCombs will enumerate all 133784560 possible 7-card poker hands
 func TestEval7CardCombs(t *testing.T) {
 	ranks, err := LoadRanks("ranks.dat.gz")

@@ -7,7 +7,6 @@ Can evaluate 5,6 and 7 card combinations.
 It uses TwoPlusTwo algorithm with pre-build ranks table (see ranks.dat.gz).
 
 On my machine (i7-7700HQ 2.80 GHz) it can evaluate 53 millions 7-cards hands per second.
-I think it fastest go implementation for now.
 
 ## Installation
 
@@ -16,6 +15,6 @@ I think it fastest go implementation for now.
 
 ## Usage
 
-Eval func returns rank and hand type. Bigger rank - better hand, so you can just compare two ranks to know which hand is better.
+Eval func returns rank and hand type. Hands can be evaluated by comparing hand type then hand rank.
 
 See test fo examples.

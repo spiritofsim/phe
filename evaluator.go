@@ -10,11 +10,10 @@ import (
 // Rank is the weight of the hand. Bigger rank is best hand
 // HandType is the name of combination
 // You can load ranks from ranks.dat or embed it in your code
-func Eval(ranks []byte, cards ...Card) (rank uint32, handType HandType, err error) {
+func Eval(ranks []byte, cards ...Card) (uint32, HandType, error) {
 	size := len(cards) // len is just for shorten code
 	if size != 7 && size != 6 && size != 5 {
-		err = errors.New("cards can be 7,6 or 5 length")
-		return
+		return 0, 0, errors.New("cards can be 7,6 or 5 length")
 	}
 
 	var p uint32 = 53
@@ -26,13 +25,13 @@ func Eval(ranks []byte, cards ...Card) (rank uint32, handType HandType, err erro
 		p = evalCard(p, ranks)
 	}
 
-	handType = HandType(p >> 12)
-	if handType == 0 {
-		err = errors.New("wrong cards")
+	tp := HandType(p >> 12)
+	if tp == 0 {
+		return 0, 0, errors.New("wrong cards")
 	}
 
-	rank = p & 0x00000fff
-	return
+	rank := p & 0x00000fff
+	return rank, tp, nil
 }
 
 func evalCard(card uint32, ranks []byte) uint32 {
