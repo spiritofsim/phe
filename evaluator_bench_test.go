@@ -21,7 +21,8 @@ func bench(b *testing.B, cnt int) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Eval(hands[i]...)
+		_, err := Eval(hands[i]...)
+		requireNoErr(b, err)
 	}
 }
 

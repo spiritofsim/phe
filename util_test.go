@@ -19,9 +19,3 @@ func requireEquals(t testing.TB, expected, actual interface{}) {
 		t.Errorf("%v expected; %v provided", expected, actual)
 	}
 }
-
-func requireTrue(t testing.TB, val bool) {
-	if !val {
-		t.Error("must be true")
-	}
-}
