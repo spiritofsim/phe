@@ -1,4 +1,4 @@
-package pha
+package phe
 
 // This array is for Stringer
 // index is the HandType

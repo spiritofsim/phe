@@ -1,4 +1,4 @@
-package pha
+package phe
 
 // Card in a deck
 type Card uint32

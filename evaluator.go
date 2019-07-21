@@ -1,4 +1,4 @@
-package pha
+package phe
 
 import (
 	"encoding/binary"

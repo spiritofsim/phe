@@ -1,11 +1,10 @@
-package pha
+package phe
 
 import (
 	"testing"
 )
 
 // This tests just for examples
-
 func TestRoyalStreetFlashIsBetterThanStreetFlashWithKing(t *testing.T) {
 	ranks, err := LoadRanks("ranks.dat.gz")
 	requireNoErr(t, err)
