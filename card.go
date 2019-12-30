@@ -1,5 +1,6 @@
 package phe
 
+
 // This map for Stringer
 var cards = map[Card]string{
 	1:  "2♣",
